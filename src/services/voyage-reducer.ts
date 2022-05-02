@@ -42,12 +42,15 @@ const initialState: VoyageState = {
             return {
                 ...state,
                 ports: addPort(state, action.data),
+                totalDistance: 0,
+                estimatedArrivalTime: ''
             };
         }
         case CALCULATE_DISTANCE: {
             return {
                 ...state,
-                totalDistance: calculateDistanceBetweenSelectedPorts(action.data) 
+                totalDistance: calculateDistanceBetweenSelectedPorts(action.data),
+                estimatedArrivalTime: ''
             };
         }
         case CALCULATE_ESTIMATED_TIME_OF_ARRIVAL: {
@@ -69,7 +72,7 @@ const initialState: VoyageState = {
  export function calculateDistanceBetweenSelectedPorts(ports: Port[]): number {
     let totalDistance: number = 0
     let totalDistanceInNauticalMiles: number = 0
-    if (ports.length <= 1) // No ports or Only One 
+    if ( ports.length <= 1) // No ports or Only One 
         return 0;
 
     ports.map(function(value, index, elements) {

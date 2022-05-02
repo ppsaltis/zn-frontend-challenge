@@ -34,3 +34,26 @@
     width: 100%;
     height: 100%;
 }
+
+#ports-table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  #ports-table td, #ports-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #ports-table tr:nth-child(even){background-color: #f2f2f2;}
+
+  #ports-table tr:hover {background-color: #ddd;}
+
+  #ports-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #8ABEB1;
+    color: white;
+  }

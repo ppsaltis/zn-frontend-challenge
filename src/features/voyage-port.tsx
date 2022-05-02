@@ -1,7 +1,7 @@
-import { useAppDispatch,useAppSelector } from './../services/hooks'
+import { useAppDispatch, useAppSelector } from './../services/hooks'
+import "./voyage-planner.css"
 export const CALCULATE_DISTANCE = "REDUX_THUNK_CALCULATE_DISTANCE"
 export const CALCULATE_ESTIMATED_TIME_OF_ARRIVAL = "REDUX_THUNK_CALCULATE_ESTIMATED_TIME_OF_ARRIVAL"
-
 
 export function VoyagePort(){
     const voyage = useAppSelector(state => state.voyage);
@@ -13,7 +13,7 @@ export function VoyagePort(){
 
             {
             voyage.ports.length == 0 ? 
-                <table>
+                <table id="ports-table">
                     <thead>
                         <tr>
                             <th>Source Port</th>
@@ -29,7 +29,7 @@ export function VoyagePort(){
                 </table>
             :
                 voyage.ports.length == 1 ? 
-                    <table>
+                    <table id="ports-table">
                         <thead>
                             <tr>
                                 <th>Source Port</th>
@@ -45,7 +45,7 @@ export function VoyagePort(){
                     </table>
                 :
                 <div>
-                    <table>
+                    <table id="ports-table">
                         <thead>
                             <tr>
                                 <th>Source Port</th>
