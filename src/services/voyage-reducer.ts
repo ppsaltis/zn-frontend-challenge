@@ -1,7 +1,7 @@
 import { AnyAction } from "redux"
 import { Port } from "./ports-reducer"
 import { ADD_VOYAGE_PORTS,  } from "../features/voyage-planner"
-import { CALCULATE_DISTANCE_BETWEEN_PORTS  } from "../features/voyage-port"
+import { CALCULATE_DISTANCE, CALCULATE_ESTIMATED_TIME_OF_ARRIVAL  } from "../features/voyage-port"
 
 /**
  * This file controls the state of the "voyage" data.  A voyage consists of 0 or more
@@ -23,13 +23,16 @@ interface VoyageState {
     ports: Port[],
 
     totalDistance: number
+
+    estimatedArrivalTime: string;
 }
 
  
 const initialState: VoyageState = {
     duration: 0,
     ports: [],
-    totalDistance: 0
+    totalDistance: 0,
+    estimatedArrivalTime: ''
  }
 
  
@@ -41,10 +44,16 @@ const initialState: VoyageState = {
                 ports: addPort(state, action.data),
             };
         }
-        case CALCULATE_DISTANCE_BETWEEN_PORTS: {
+        case CALCULATE_DISTANCE: {
             return {
                 ...state,
-                totalDistance: calculateDistanceBetweenSelectedPorts(state, action.data) 
+                totalDistance: calculateDistanceBetweenSelectedPorts(action.data) 
+            };
+        }
+        case CALCULATE_ESTIMATED_TIME_OF_ARRIVAL: {
+            return {
+                ...state,
+                estimatedArrivalTime: calculateEstimatedTimeOfArrival(action.data) 
             };
         }
         default: {
@@ -57,8 +66,7 @@ const initialState: VoyageState = {
     return state.ports.concat(port);
  }
 
- export function calculateDistanceBetweenSelectedPorts(state: VoyageState, ports: Port[]): number {
-    debugger;
+ export function calculateDistanceBetweenSelectedPorts(ports: Port[]): number {
     let totalDistance: number = 0
 
     if (ports.length <= 1) // No ports or Only One 
@@ -77,26 +85,40 @@ const initialState: VoyageState = {
     return totalDistance;
  }
 
+ export function calculateEstimatedTimeOfArrival(totalDistance: number): string {
+    const currentTime: Date = new Date();
+    const totalDistanceInNauticalMiles = totalDistance * 0.539957
+    const durationInHours = totalDistanceInNauticalMiles / 10; // 10 knot  
+    
+    const hours = (durationInHours / 60) - ((durationInHours / 60) % 1) 
+    const mins = ((durationInHours / 60) % 1) * 60; // e.g convet 0.9 of an hour to mins
+
+    currentTime.setHours(currentTime.getHours() + hours)
+    currentTime.setMinutes(currentTime.getMinutes() + mins)
+
+    return currentTime.toUTCString();
+ }
+
  export function removePort(port: Port){}
  export function movePort(port: Port, newPosition: number){}
 
 function haversine(lat1: number, lon1: number, lat2: number, lon2: number): number
-    {
-        // distance between latitudes
-        // and longitudes
-        let dLat = (lat2 - lat1) * Math.PI / 180.0;
-        let dLon = (lon2 - lon1) * Math.PI / 180.0;
-           
-        // convert to radiansa
-        lat1 = (lat1) * Math.PI / 180.0;
-        lat2 = (lat2) * Math.PI / 180.0;
-         
-        // apply formulae
-        let a = Math.pow(Math.sin(dLat / 2), 2) +
-                   Math.pow(Math.sin(dLon / 2), 2) *
-                   Math.cos(lat1) *
-                   Math.cos(lat2);
-        let rad = 6371;
-        let c = 2 * Math.asin(Math.sqrt(a));
-        return rad * c;
-    }
+{
+    // distance between latitudes
+    // and longitudes
+    let dLat = (lat2 - lat1) * Math.PI / 180.0;
+    let dLon = (lon2 - lon1) * Math.PI / 180.0;
+    
+    // convert to radiansa
+    lat1 = (lat1) * Math.PI / 180.0;
+    lat2 = (lat2) * Math.PI / 180.0;
+    
+    // apply formulae
+    let a = Math.pow(Math.sin(dLat / 2), 2) +
+            Math.pow(Math.sin(dLon / 2), 2) *
+            Math.cos(lat1) *
+            Math.cos(lat2);
+    let rad = 6371.0710; // to use kilometers
+    let c = 2 * Math.asin(Math.sqrt(a));
+    return rad * c;
+}
