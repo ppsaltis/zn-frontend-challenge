@@ -69,12 +69,15 @@ export function VoyagePort(){
                             })}
                         </tbody>
                     </table>  
-
-                    <button onClick={() => 
-                        dispatch( 
-                            {type: CALCULATE_DISTANCE, data: voyage.ports })
-                        }>Calculate Total Distance 
-                    </button>
+                    
+                    <div>
+                        <br></br>
+                        <button className='button' onClick={() => 
+                            dispatch( 
+                                {type: CALCULATE_DISTANCE, data: voyage.ports })
+                            }>Calculate Total Distance 
+                        </button>
+                    </div>
 
                     {voyage.totalDistance == 0 
                         ? 
@@ -84,7 +87,7 @@ export function VoyagePort(){
                             <h3>Total Distance</h3>
                             <p>{voyage.totalDistance} N.M</p>
 
-                            <button onClick={() => 
+                            <button className='button' onClick={() => 
                                 dispatch( 
                                     {type: CALCULATE_ESTIMATED_TIME_OF_ARRIVAL, data: voyage.totalDistance })
                                 }>Calculate Estimated time of arrival
