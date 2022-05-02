@@ -68,7 +68,7 @@ const initialState: VoyageState = {
 
  export function calculateDistanceBetweenSelectedPorts(ports: Port[]): number {
     let totalDistance: number = 0
-
+    let totalDistanceInNauticalMiles: number = 0
     if (ports.length <= 1) // No ports or Only One 
         return 0;
 
@@ -82,13 +82,13 @@ const initialState: VoyageState = {
         totalDistance += haversine(current.lat, current.lng, next.lat, next.lng)
     })
     
-    return totalDistance;
+    totalDistanceInNauticalMiles = totalDistance * 0.539957;
+    return totalDistanceInNauticalMiles;
  }
 
  export function calculateEstimatedTimeOfArrival(totalDistance: number): string {
     const currentTime: Date = new Date();
-    const totalDistanceInNauticalMiles = totalDistance * 0.539957
-    const durationInHours = totalDistanceInNauticalMiles / 10; // 10 knot  
+    const durationInHours = totalDistance / 10; // 10 knot  
     
     const hours = (durationInHours / 60) - ((durationInHours / 60) % 1) 
     const mins = ((durationInHours / 60) % 1) * 60; // e.g convet 0.9 of an hour to mins

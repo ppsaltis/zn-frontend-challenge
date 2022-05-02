@@ -1,5 +1,4 @@
 import { useAppDispatch,useAppSelector } from './../services/hooks'
-import { Port } from "./../services/ports-reducer"
 export const CALCULATE_DISTANCE = "REDUX_THUNK_CALCULATE_DISTANCE"
 export const CALCULATE_ESTIMATED_TIME_OF_ARRIVAL = "REDUX_THUNK_CALCULATE_ESTIMATED_TIME_OF_ARRIVAL"
 
@@ -83,17 +82,17 @@ export function VoyagePort(){
                         :
                         <div>
                             <h3>Total Distance</h3>
-                            <p>{voyage.totalDistance} K.M</p>
+                            <p>{voyage.totalDistance} N.M</p>
+
+                            <button onClick={() => 
+                                dispatch( 
+                                    {type: CALCULATE_ESTIMATED_TIME_OF_ARRIVAL, data: voyage.totalDistance })
+                                }>Calculate Estimated time of arrival
+                            </button>
                         </div>
                     }
 
-                    <button onClick={() => 
-                        dispatch( 
-                            {type: CALCULATE_ESTIMATED_TIME_OF_ARRIVAL, data: voyage.totalDistance })
-                        }>Calculate Estimated time of arrival
-                    </button>
-
-                    {voyage.estimatedArrivalTime == '' 
+                    {(voyage.estimatedArrivalTime == '' || voyage.totalDistance == 0)  
                         ? 
                         '' 
                         :
