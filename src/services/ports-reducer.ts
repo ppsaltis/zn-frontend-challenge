@@ -4,24 +4,30 @@
  */
 
 import { AnyAction } from "redux"
+import { LOAD_USERS_ERROR, LOAD_USERS_LOADING, LOAD_USERS_SUCCESS, LOAD_USERS_SUCCESS_REC } from "../features/voyage-planner"
 
 export interface Port {
     uncode: string,
     name: string,
     lat: number,
-    lon: number
+    lng: number,
+    duration: number
 }
 
-interface PortsState {
+export interface PortsState {
+    loading: boolean,
+    error: string,
     count: number,
     offset: number,
     ports: Port[]
 }
 
 const initialState: PortsState = {
+    loading: true,
+    error: '',
     count: 0,
     offset: 0,
-    ports: []
+    ports: [],
 }
 
 /**
@@ -31,9 +37,39 @@ const initialState: PortsState = {
  * @param action 
  * @returns PortsState
  */
-export function portsReducer(state = initialState, action: AnyAction): PortsState{
-
-    return state
+export function portsReducer(state = initialState, action: AnyAction){
+    switch (action.type) {
+        case LOAD_USERS_LOADING: {
+            return {
+                ...state,
+                loading: true,
+                error: false,
+            };
+        }
+        case LOAD_USERS_SUCCESS: {
+            return {
+                ...state,
+                ports: action.data as Port[],
+                loading: false
+            }
+        }
+        case LOAD_USERS_ERROR: {
+            return {
+                ...state,
+                loading: false,
+                error: action.error
+            };
+        }
+        case LOAD_USERS_SUCCESS_REC: {
+            return {
+                ...state,
+                ports: action.data as Port[],
+            }
+        }
+        default: {
+            return state;
+        }
+    }
 }
 
 /**
@@ -42,7 +78,4 @@ export function portsReducer(state = initialState, action: AnyAction): PortsStat
  * so you may need multiple calls to fetch all the data
  * @param offset: where to start pulling from
  */
-export function fetchPorts(offset: number){}
-
-
-
+ export function fetchPorts(offset: number){}

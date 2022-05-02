@@ -1,5 +1,6 @@
 import { AnyAction } from "redux"
 import { Port } from "./ports-reducer"
+import { ADD_VOYAGE_PORTS } from "../features/voyage-planner"
 /**
  * This file controls the state of the "voyage" data.  A voyage consists of 0 or more
  * stops in a port.  You should calculate the total duration of the voyage as ports
@@ -23,16 +24,28 @@ interface VoyageState {
  
 const initialState: VoyageState = {
     duration: 0,
-    ports: []
+    ports: [],
  }
 
  
  export function voyageReducer(state = initialState, action: AnyAction){
- 
-     return state
+    switch (action.type) {
+        case ADD_VOYAGE_PORTS: {
+            return {
+                ...state,
+                ports: addPort(state, action.data),
+            };
+        }
+        
+        default: {
+            return state;
+        }
+    }
  }
 
- export function addPort(port: Port){}
+ export function addPort(state: VoyageState, port: Port): Port[] {
+    return state.ports.concat(port);
+ }
+
  export function removePort(port: Port){}
  export function movePort(port: Port, newPosition: number){}
- 
